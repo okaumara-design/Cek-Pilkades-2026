@@ -2,54 +2,133 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#163a6e">
-  <title>Cek Pilkades 2026</title>
-
-  <link rel="manifest" href="./manifest.json">
-  <link rel="icon" href="./icon.svg" type="image/svg+xml">
-
-  <style>
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: #163a6e;
-      color: white;
-      display: flex;
-      min-height: 100vh;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-    }
-
-    .loading {
-      padding: 25px;
-    }
-
-    .loading p {
-      color: #dbeafe;
-      font-size: 14px;
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#163a6e">
+<title>Pasang Cek Pilkades 2026</title>
+<link rel="manifest" href="./manifest.json">
+<link rel="icon" href="./icon.svg">
+<style>
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  background: #f1f5f9;
+  font-family: Arial, sans-serif;
+  color: #163a6e;
+}
+.card {
+  width: 100%;
+  max-width: 420px;
+  background: white;
+  border-radius: 20px;
+  padding: 30px 24px;
+  text-align: center;
+  box-shadow: 0 8px 30px #163a6e18;
+}
+.icon {
+  font-size: 52px;
+  margin-bottom: 12px;
+}
+h2 { margin: 8px 0; }
+p {
+  color: #64748b;
+  line-height: 1.6;
+  font-size: 14px;
+}
+button, .open {
+  display: block;
+  width: 100%;
+  padding: 15px;
+  border: 0;
+  border-radius: 10px;
+  background: #0d9488;
+  color: white;
+  font-size: 15px;
+  font-weight: bold;
+  text-decoration: none;
+  cursor: pointer;
+  margin-top: 15px;
+}
+.open { background: #163a6e; }
+#status {
+  margin-top: 16px;
+  font-size: 13px;
+}
+</style>
 </head>
 <body>
+<div class="card">
+  <div class="icon">🗳️</div>
+  <h2>CEK PILKADES 2026</h2>
+  <p>
+    Aplikasi resmi layanan pencarian data pemilih
+    Pilkades Desa Sumurgintung Tahun 2026.
+  </p>
 
-  <div class="loading">
-    <h2>CEK PILKADES 2026</h2>
-    <p>Membuka layanan pencarian data pemilih...</p>
+  <button id="installBtn" hidden>
+    PASANG APLIKASI
+  </button>
+
+  <a class="open"
+     href="https://sites.google.com/view/pilkadessumurgintung2026/cekdatapemilih">
+     BUKA PENCARIAN DATA PEMILIH
+  </a>
+
+  <div id="status">
+    Menyiapkan aplikasi...
   </div>
+</div>
 
-  <script>
-    const tujuan =
-      "https://sites.google.com/view/pilkadessumurgintung2026/cekdatapemilih";
+<script>
+let deferredPrompt = null;
 
-    if ("serviceWorker" in navigator) {
-      navigator.serviceWorker.register("./service-worker.js");
-    }
+const installBtn = document.getElementById("installBtn");
+const statusText = document.getElementById("status");
 
-    window.location.replace(tujuan);
-  </script>
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker.register("./service-worker.js");
+}
 
+window.addEventListener("beforeinstallprompt", (event) => {
+  event.preventDefault();
+  deferredPrompt = event;
+  installBtn.hidden = false;
+  statusText.textContent = "Aplikasi siap dipasang.";
+});
+
+installBtn.addEventListener("click", async () => {
+  if (!deferredPrompt) return;
+
+  deferredPrompt.prompt();
+  const result = await deferredPrompt.userChoice;
+
+  if (result.outcome === "accepted") {
+    statusText.textContent = "Terima kasih, aplikasi sedang dipasang.";
+  } else {
+    statusText.textContent = "Pemasangan dibatalkan.";
+  }
+
+  deferredPrompt = null;
+  installBtn.hidden = true;
+});
+
+window.addEventListener("appinstalled", () => {
+  statusText.textContent = "Aplikasi berhasil dipasang.";
+  installBtn.hidden = true;
+});
+
+if (window.matchMedia("(display-mode: standalone)").matches) {
+  window.location.replace(
+    "https://sites.google.com/view/pilkadessumurgintung2026/cekdatapemilih"
+  );
+} else {
+  statusText.textContent =
+    "Tekan PASANG APLIKASI untuk memasang di HP Anda.";
+}
+</script>
 </body>
 </html>

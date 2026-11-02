@@ -2,104 +2,159 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#163a6e">
-  <meta name="description" content="Aplikasi Cek Data Pemilih Pilkades Sumurgintung Tahun 2026">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#163a6e">
+<meta name="description" content="Cek Data Pemilih Pilkades Sumurgintung 2026">
 
-  <title>Cek Pilkades 2026</title>
+<title>Cek Pilkades 2026</title>
+<link rel="manifest" href="./manifest.json">
+<link rel="icon" href="./icon.svg" type="image/svg+xml">
 
-  <link rel="manifest" href="manifest.json">
-  <link rel="icon" href="icon.svg" type="image/svg+xml">
+<style>
+* { box-sizing:border-box; }
 
-  <style>
-    * { box-sizing: border-box; }
+body {
+  margin:0;
+  font-family:Arial,sans-serif;
+  background:#f1f5f9;
+  color:#1e293b;
+}
 
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: #f1f5f9;
-      color: #1e293b;
-    }
+header {
+  background:#163a6e;
+  color:white;
+  padding:35px 20px;
+  text-align:center;
+}
 
-    header {
-      background: #163a6e;
-      color: white;
-      padding: 28px 20px;
-      text-align: center;
-    }
+.logo { font-size:48px; }
 
-    .logo {
-      font-size: 42px;
-      margin-bottom: 10px;
-    }
+header h1 { font-size:24px; margin:10px 0; }
 
-    header h1 {
-      font-size: 23px;
-      margin: 5px 0;
-    }
+header p { color:#dbeafe; font-size:13px; }
 
-    header p {
-      font-size: 13px;
-      color: #dbeafe;
-    }
+main {
+  max-width:600px;
+  margin:25px auto;
+  padding:0 16px;
+}
 
-    main {
-      max-width: 600px;
-      margin: 25px auto;
-      padding: 0 16px;
-    }
+.card {
+  background:white;
+  padding:23px;
+  border-radius:16px;
+  margin-bottom:18px;
+  box-shadow:0 4px 15px #0000000d;
+}
 
-    .card {
-      background: white;
-      padding: 22px;
-      border-radius: 16px;
-      box-shadow: 0 4px 15px #0000000d;
-      margin-bottom: 18px;
-    }
+.info {
+  font-size:14px;
+  line-height:1.7;
+  color:#64748b;
+}
 
-    .btn {
-      display: block;
-      width: 100%;
-      padding: 15px;
-      border: none;
-      border-radius: 10px;
-      background: #1d4ed8;
-      color: white;
-      font-size: 16px;
-      font-weight: bold;
-      text-decoration: none;
-      text-align: center;
-      cursor: pointer;
-    }
+.btn {
+  display:block;
+  width:100%;
+  padding:15px;
+  border:0;
+  border-radius:10px;
+  background:#1d4ed8;
+  color:white;
+  font-size:15px;
+  font-weight:bold;
+  text-align:center;
+  text-decoration:none;
+  cursor:pointer;
+}
 
-    .btn-install {
-      background: #0d9488;
-      margin-top: 12px;
-    }
+footer {
+  text-align:center;
+  padding:25px;
+  font-size:12px;
+  color:#64748b;
+}
 
-    .info {
-      font-size: 13px;
-      color: #64748b;
-      line-height: 1.6;
-    }
+/* JENDELA INSTALASI */
 
-    iframe {
-      width: 100%;
-      height: 650px;
-      border: 0;
-      border-radius: 10px;
-    }
+.modal-overlay {
+  display:none;
+  position:fixed;
+  inset:0;
+  background:rgba(15,23,42,.68);
+  z-index:9999;
+  align-items:center;
+  justify-content:center;
+  padding:20px;
+}
 
-    footer {
-      text-align: center;
-      padding: 25px;
-      color: #64748b;
-      font-size: 12px;
-    }
+.modal-overlay.show { display:flex; }
 
-    #installArea { display: none; }
-  </style>
+.modal {
+  width:100%;
+  max-width:390px;
+  background:white;
+  border-radius:22px;
+  padding:27px 23px;
+  text-align:center;
+  box-shadow:0 15px 50px #0005;
+  animation:pop .3s ease;
+}
+
+@keyframes pop {
+  from { opacity:0; transform:translateY(15px); }
+  to { opacity:1; transform:translateY(0); }
+}
+
+.app-icon {
+  width:76px;
+  height:76px;
+  margin:0 auto 15px;
+  border-radius:19px;
+  background:#163a6e;
+  color:white;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:39px;
+}
+
+.modal h2 {
+  font-size:21px;
+  margin:8px 0;
+  color:#163a6e;
+}
+
+.modal p {
+  color:#64748b;
+  font-size:14px;
+  line-height:1.6;
+}
+
+.install-btn {
+  background:#0d9488;
+  margin-top:20px;
+}
+
+.later-btn {
+  background:#e2e8f0;
+  color:#334155;
+  margin-top:10px;
+}
+
+#installHelp {
+  display:none;
+  text-align:left;
+  background:#eff6ff;
+  border-radius:12px;
+  padding:13px;
+  margin-top:15px;
+  color:#1e40af;
+  font-size:13px;
+  line-height:1.7;
+}
+</style>
 </head>
 
 <body>
@@ -107,8 +162,8 @@
 <header>
   <div class="logo">🗳️</div>
   <h1>CEK PILKADES 2026</h1>
-  <p>Panitia Pilkades Desa Sumurgintung</p>
-  <p>Kecamatan Pagaden Barat · Kabupaten Subang</p>
+  <p>PANITIA PILKADES DESA SUMURGINTUNG</p>
+  <p>KECAMATAN PAGADEN BARAT · KABUPATEN SUBANG</p>
 </header>
 
 <main>
@@ -127,24 +182,11 @@
     </a>
   </div>
 
-  <div class="card" id="installArea">
-    <h3>Pasang Aplikasi Cek Pilkades?</h3>
-    <p class="info">
-      Pasang aplikasi ini di layar utama HP Anda
-      agar lebih mudah mengakses layanan Pilkades.
-    </p>
-
-    <button class="btn btn-install" id="installBtn">
-      YA, PASANG APLIKASI
-    </button>
-    <p class="info" id="installMessage"></p>
-  </div>
-
   <div class="card">
     <h3>Informasi Pilkades</h3>
     <p class="info">
-      Gunakan tombol pencarian data pemilih di atas
-      untuk mengakses layanan resmi panitia.
+      Gunakan layanan pencarian untuk mengetahui
+      informasi data pemilih Pilkades.
     </p>
   </div>
 
@@ -155,48 +197,120 @@
   TAHUN 2026
 </footer>
 
+<!-- POPUP INSTALASI -->
+
+<div class="modal-overlay" id="installModal">
+  <div class="modal">
+
+    <div class="app-icon">🗳️</div>
+
+    <h2>Pasang Aplikasi?</h2>
+
+    <p>
+      Dapatkan akses lebih mudah ke layanan
+      Cek Pilkades 2026 langsung dari layar
+      utama HP Anda.
+    </p>
+
+    <button class="btn install-btn" id="installBtn">
+      YA, PASANG APLIKASI
+    </button>
+
+    <button class="btn later-btn" id="laterBtn">
+      NANTI SAJA
+    </button>
+
+    <div id="installHelp"></div>
+
+  </div>
+</div>
+
 <script>
-  let deferredPrompt;
+let deferredPrompt = null;
 
-  const installArea = document.getElementById("installArea");
-  const installBtn = document.getElementById("installBtn");
-  const message = document.getElementById("installMessage");
+const modal = document.getElementById("installModal");
+const installBtn = document.getElementById("installBtn");
+const laterBtn = document.getElementById("laterBtn");
+const help = document.getElementById("installHelp");
 
-  window.addEventListener("beforeinstallprompt", (event) => {
-    event.preventDefault();
-    deferredPrompt = event;
-    installArea.style.display = "block";
+const isInstalled =
+  window.matchMedia("(display-mode: standalone)").matches ||
+  window.navigator.standalone === true;
+
+const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
+
+function showModal() {
+  if (isInstalled) return;
+  if (sessionStorage.getItem("installDismissed")) return;
+
+  modal.classList.add("show");
+}
+
+function closeModal() {
+  modal.classList.remove("show");
+  sessionStorage.setItem("installDismissed", "yes");
+}
+
+window.addEventListener("beforeinstallprompt", event => {
+  event.preventDefault();
+  deferredPrompt = event;
+  showModal();
+});
+
+// Tampilkan tawaran saat pengunjung membuka halaman
+if (!isInstalled) {
+  window.addEventListener("load", () => {
+    setTimeout(showModal, 1200);
   });
+}
 
-  installBtn.addEventListener("click", async () => {
-    if (!deferredPrompt) {
-      message.textContent =
-        "Silakan gunakan menu browser untuk memasang aplikasi.";
-      return;
-    }
+installBtn.addEventListener("click", async () => {
 
+  if (deferredPrompt) {
     deferredPrompt.prompt();
 
     const result = await deferredPrompt.userChoice;
 
-    message.textContent =
-      result.outcome === "accepted"
-        ? "Terima kasih telah memasang aplikasi!"
-        : "Pemasangan belum dilakukan.";
+    if (result.outcome === "accepted") {
+      closeModal();
+    } else {
+      help.style.display = "block";
+      help.textContent =
+        "Pemasangan belum dilakukan. Anda dapat mencoba kembali melalui menu browser.";
+    }
 
     deferredPrompt = null;
-    installArea.style.display = "none";
-  });
-
-  window.addEventListener("appinstalled", () => {
-    installArea.style.display = "none";
-  });
-
-  if ("serviceWorker" in navigator) {
-    window.addEventListener("load", () => {
-      navigator.serviceWorker.register("./service-worker.js");
-    });
+    return;
   }
+
+  help.style.display = "block";
+
+  if (isIOS) {
+    help.innerHTML =
+      "Cara memasang di iPhone:<br>" +
+      "1. Tekan tombol Share (Bagikan) di Safari.<br>" +
+      "2. Pilih Add to Home Screen (Tambahkan ke Layar Utama).<br>" +
+      "3. Tekan Add (Tambah).";
+  } else {
+    help.innerHTML =
+      "Cara memasang aplikasi:<br>" +
+      "1. Buka menu tiga titik (⋮) Chrome.<br>" +
+      "2. Pilih Install app atau Tambahkan ke layar utama.<br>" +
+      "3. Ikuti konfirmasi pemasangan.";
+  }
+});
+
+laterBtn.addEventListener("click", closeModal);
+
+window.addEventListener("appinstalled", () => {
+  modal.classList.remove("show");
+});
+
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("./service-worker.js");
+  });
+}
 </script>
 
 </body>

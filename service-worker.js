@@ -1,5 +1,5 @@
 
-const CACHE_NAME = "cek-pilkades-2026-v1";
+const CACHE_NAME = "cek-pilkades-2026-v2";
 
 const FILES_TO_CACHE = [
   "./",

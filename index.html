@@ -2,316 +2,54 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#163a6e">
-<meta name="description" content="Cek Data Pemilih Pilkades Sumurgintung 2026">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#163a6e">
+  <title>Cek Pilkades 2026</title>
 
-<title>Cek Pilkades 2026</title>
-<link rel="manifest" href="./manifest.json">
-<link rel="icon" href="./icon.svg" type="image/svg+xml">
+  <link rel="manifest" href="./manifest.json">
+  <link rel="icon" href="./icon.svg" type="image/svg+xml">
 
-<style>
-* { box-sizing:border-box; }
-
-body {
-  margin:0;
-  font-family:Arial,sans-serif;
-  background:#f1f5f9;
-  color:#1e293b;
-}
-
-header {
-  background:#163a6e;
-  color:white;
-  padding:35px 20px;
-  text-align:center;
-}
-
-.logo { font-size:48px; }
-
-header h1 { font-size:24px; margin:10px 0; }
-
-header p { color:#dbeafe; font-size:13px; }
-
-main {
-  max-width:600px;
-  margin:25px auto;
-  padding:0 16px;
-}
-
-.card {
-  background:white;
-  padding:23px;
-  border-radius:16px;
-  margin-bottom:18px;
-  box-shadow:0 4px 15px #0000000d;
-}
-
-.info {
-  font-size:14px;
-  line-height:1.7;
-  color:#64748b;
-}
-
-.btn {
-  display:block;
-  width:100%;
-  padding:15px;
-  border:0;
-  border-radius:10px;
-  background:#1d4ed8;
-  color:white;
-  font-size:15px;
-  font-weight:bold;
-  text-align:center;
-  text-decoration:none;
-  cursor:pointer;
-}
-
-footer {
-  text-align:center;
-  padding:25px;
-  font-size:12px;
-  color:#64748b;
-}
-
-/* JENDELA INSTALASI */
-
-.modal-overlay {
-  display:none;
-  position:fixed;
-  inset:0;
-  background:rgba(15,23,42,.68);
-  z-index:9999;
-  align-items:center;
-  justify-content:center;
-  padding:20px;
-}
-
-.modal-overlay.show { display:flex; }
-
-.modal {
-  width:100%;
-  max-width:390px;
-  background:white;
-  border-radius:22px;
-  padding:27px 23px;
-  text-align:center;
-  box-shadow:0 15px 50px #0005;
-  animation:pop .3s ease;
-}
-
-@keyframes pop {
-  from { opacity:0; transform:translateY(15px); }
-  to { opacity:1; transform:translateY(0); }
-}
-
-.app-icon {
-  width:76px;
-  height:76px;
-  margin:0 auto 15px;
-  border-radius:19px;
-  background:#163a6e;
-  color:white;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-size:39px;
-}
-
-.modal h2 {
-  font-size:21px;
-  margin:8px 0;
-  color:#163a6e;
-}
-
-.modal p {
-  color:#64748b;
-  font-size:14px;
-  line-height:1.6;
-}
-
-.install-btn {
-  background:#0d9488;
-  margin-top:20px;
-}
-
-.later-btn {
-  background:#e2e8f0;
-  color:#334155;
-  margin-top:10px;
-}
-
-#installHelp {
-  display:none;
-  text-align:left;
-  background:#eff6ff;
-  border-radius:12px;
-  padding:13px;
-  margin-top:15px;
-  color:#1e40af;
-  font-size:13px;
-  line-height:1.7;
-}
-</style>
-</head>
-
-<body>
-
-<header>
-  <div class="logo">🗳️</div>
-  <h1>CEK PILKADES 2026</h1>
-  <p>PANITIA PILKADES DESA SUMURGINTUNG</p>
-  <p>KECAMATAN PAGADEN BARAT · KABUPATEN SUBANG</p>
-</header>
-
-<main>
-
-  <div class="card">
-    <h3>Selamat Datang</h3>
-    <p class="info">
-      Layanan informasi dan pencarian data pemilih
-      Pemilihan Kepala Desa Sumurgintung Tahun 2026.
-    </p>
-
-    <a class="btn"
-       href="https://sites.google.com/view/pilkadescidadap/daftar-pemilih-pilkades"
-       target="_blank" rel="noopener">
-       BUKA PENCARIAN DATA PEMILIH
-    </a>
-  </div>
-
-  <div class="card">
-    <h3>Informasi Pilkades</h3>
-    <p class="info">
-      Gunakan layanan pencarian untuk mengetahui
-      informasi data pemilih Pilkades.
-    </p>
-  </div>
-
-</main>
-
-<footer>
-  PANITIA PILKADES DESA SUMURGINTUNG<br>
-  TAHUN 2026
-</footer>
-
-<!-- POPUP INSTALASI -->
-
-<div class="modal-overlay" id="installModal">
-  <div class="modal">
-
-    <div class="app-icon">🗳️</div>
-
-    <h2>Pasang Aplikasi?</h2>
-
-    <p>
-      Dapatkan akses lebih mudah ke layanan
-      Cek Pilkades 2026 langsung dari layar
-      utama HP Anda.
-    </p>
-
-    <button class="btn install-btn" id="installBtn">
-      YA, PASANG APLIKASI
-    </button>
-
-    <button class="btn later-btn" id="laterBtn">
-      NANTI SAJA
-    </button>
-
-    <div id="installHelp"></div>
-
-  </div>
-</div>
-
-<script>
-let deferredPrompt = null;
-
-const modal = document.getElementById("installModal");
-const installBtn = document.getElementById("installBtn");
-const laterBtn = document.getElementById("laterBtn");
-const help = document.getElementById("installHelp");
-
-const isInstalled =
-  window.matchMedia("(display-mode: standalone)").matches ||
-  window.navigator.standalone === true;
-
-const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
-
-function showModal() {
-  if (isInstalled) return;
-  if (sessionStorage.getItem("installDismissed")) return;
-
-  modal.classList.add("show");
-}
-
-function closeModal() {
-  modal.classList.remove("show");
-  sessionStorage.setItem("installDismissed", "yes");
-}
-
-window.addEventListener("beforeinstallprompt", event => {
-  event.preventDefault();
-  deferredPrompt = event;
-  showModal();
-});
-
-// Tampilkan tawaran saat pengunjung membuka halaman
-if (!isInstalled) {
-  window.addEventListener("load", () => {
-    setTimeout(showModal, 1200);
-  });
-}
-
-installBtn.addEventListener("click", async () => {
-
-  if (deferredPrompt) {
-    deferredPrompt.prompt();
-
-    const result = await deferredPrompt.userChoice;
-
-    if (result.outcome === "accepted") {
-      closeModal();
-    } else {
-      help.style.display = "block";
-      help.textContent =
-        "Pemasangan belum dilakukan. Anda dapat mencoba kembali melalui menu browser.";
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #163a6e;
+      color: white;
+      display: flex;
+      min-height: 100vh;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
     }
 
-    deferredPrompt = null;
-    return;
-  }
+    .loading {
+      padding: 25px;
+    }
 
-  help.style.display = "block";
+    .loading p {
+      color: #dbeafe;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
 
-  if (isIOS) {
-    help.innerHTML =
-      "Cara memasang di iPhone:<br>" +
-      "1. Tekan tombol Share (Bagikan) di Safari.<br>" +
-      "2. Pilih Add to Home Screen (Tambahkan ke Layar Utama).<br>" +
-      "3. Tekan Add (Tambah).";
-  } else {
-    help.innerHTML =
-      "Cara memasang aplikasi:<br>" +
-      "1. Buka menu tiga titik (⋮) Chrome.<br>" +
-      "2. Pilih Install app atau Tambahkan ke layar utama.<br>" +
-      "3. Ikuti konfirmasi pemasangan.";
-  }
-});
+  <div class="loading">
+    <h2>CEK PILKADES 2026</h2>
+    <p>Membuka layanan pencarian data pemilih...</p>
+  </div>
 
-laterBtn.addEventListener("click", closeModal);
+  <script>
+    const tujuan =
+      "https://sites.google.com/view/pilkadessumurgintung2026/cekdatapemilih";
 
-window.addEventListener("appinstalled", () => {
-  modal.classList.remove("show");
-});
+    if ("serviceWorker" in navigator) {
+      navigator.serviceWorker.register("./service-worker.js");
+    }
 
-if ("serviceWorker" in navigator) {
-  window.addEventListener("load", () => {
-    navigator.serviceWorker.register("./service-worker.js");
-  });
-}
-</script>
+    window.location.replace(tujuan);
+  </script>
 
 </body>
 </html>

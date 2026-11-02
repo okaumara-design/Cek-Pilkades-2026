@@ -139,11 +139,29 @@ else {
   });
 
   installBtn.addEventListener("click", async () => {
-    if (!deferredPrompt) return;
 
-    deferredPrompt.prompt();
+  if (!deferredPrompt) {
+    statusText.textContent =
+      "Instalasi otomatis belum tersedia. Buka menu Chrome (⋮), lalu pilih Instal aplikasi atau Tambahkan ke layar utama.";
 
-    const result = await deferredPrompt.userChoice;
+    return;
+  }
+
+  deferredPrompt.prompt();
+
+  const result = await deferredPrompt.userChoice;
+
+  if (result.outcome === "accepted") {
+    statusText.textContent =
+      "Aplikasi sedang dipasang.";
+  } else {
+    statusText.textContent =
+      "Pemasangan dibatalkan.";
+  }
+
+  deferredPrompt = null;
+  installBtn.hidden = true;
+});
 
     if (result.outcome === "accepted") {
       statusText.textContent =

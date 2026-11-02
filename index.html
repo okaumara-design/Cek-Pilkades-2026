@@ -1,0 +1,203 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#163a6e">
+  <meta name="description" content="Aplikasi Cek Data Pemilih Pilkades Sumurgintung Tahun 2026">
+
+  <title>Cek Pilkades 2026</title>
+
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" href="icon.svg" type="image/svg+xml">
+
+  <style>
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f1f5f9;
+      color: #1e293b;
+    }
+
+    header {
+      background: #163a6e;
+      color: white;
+      padding: 28px 20px;
+      text-align: center;
+    }
+
+    .logo {
+      font-size: 42px;
+      margin-bottom: 10px;
+    }
+
+    header h1 {
+      font-size: 23px;
+      margin: 5px 0;
+    }
+
+    header p {
+      font-size: 13px;
+      color: #dbeafe;
+    }
+
+    main {
+      max-width: 600px;
+      margin: 25px auto;
+      padding: 0 16px;
+    }
+
+    .card {
+      background: white;
+      padding: 22px;
+      border-radius: 16px;
+      box-shadow: 0 4px 15px #0000000d;
+      margin-bottom: 18px;
+    }
+
+    .btn {
+      display: block;
+      width: 100%;
+      padding: 15px;
+      border: none;
+      border-radius: 10px;
+      background: #1d4ed8;
+      color: white;
+      font-size: 16px;
+      font-weight: bold;
+      text-decoration: none;
+      text-align: center;
+      cursor: pointer;
+    }
+
+    .btn-install {
+      background: #0d9488;
+      margin-top: 12px;
+    }
+
+    .info {
+      font-size: 13px;
+      color: #64748b;
+      line-height: 1.6;
+    }
+
+    iframe {
+      width: 100%;
+      height: 650px;
+      border: 0;
+      border-radius: 10px;
+    }
+
+    footer {
+      text-align: center;
+      padding: 25px;
+      color: #64748b;
+      font-size: 12px;
+    }
+
+    #installArea { display: none; }
+  </style>
+</head>
+
+<body>
+
+<header>
+  <div class="logo">🗳️</div>
+  <h1>CEK PILKADES 2026</h1>
+  <p>Panitia Pilkades Desa Sumurgintung</p>
+  <p>Kecamatan Pagaden Barat · Kabupaten Subang</p>
+</header>
+
+<main>
+
+  <div class="card">
+    <h3>Selamat Datang</h3>
+    <p class="info">
+      Layanan informasi dan pencarian data pemilih
+      Pemilihan Kepala Desa Sumurgintung Tahun 2026.
+    </p>
+
+    <a class="btn"
+       href="https://sites.google.com/view/pilkadescidadap/daftar-pemilih-pilkades"
+       target="_blank" rel="noopener">
+       BUKA PENCARIAN DATA PEMILIH
+    </a>
+  </div>
+
+  <div class="card" id="installArea">
+    <h3>Pasang Aplikasi Cek Pilkades?</h3>
+    <p class="info">
+      Pasang aplikasi ini di layar utama HP Anda
+      agar lebih mudah mengakses layanan Pilkades.
+    </p>
+
+    <button class="btn btn-install" id="installBtn">
+      YA, PASANG APLIKASI
+    </button>
+    <p class="info" id="installMessage"></p>
+  </div>
+
+  <div class="card">
+    <h3>Informasi Pilkades</h3>
+    <p class="info">
+      Gunakan tombol pencarian data pemilih di atas
+      untuk mengakses layanan resmi panitia.
+    </p>
+  </div>
+
+</main>
+
+<footer>
+  PANITIA PILKADES DESA SUMURGINTUNG<br>
+  TAHUN 2026
+</footer>
+
+<script>
+  let deferredPrompt;
+
+  const installArea = document.getElementById("installArea");
+  const installBtn = document.getElementById("installBtn");
+  const message = document.getElementById("installMessage");
+
+  window.addEventListener("beforeinstallprompt", (event) => {
+    event.preventDefault();
+    deferredPrompt = event;
+    installArea.style.display = "block";
+  });
+
+  installBtn.addEventListener("click", async () => {
+    if (!deferredPrompt) {
+      message.textContent =
+        "Silakan gunakan menu browser untuk memasang aplikasi.";
+      return;
+    }
+
+    deferredPrompt.prompt();
+
+    const result = await deferredPrompt.userChoice;
+
+    message.textContent =
+      result.outcome === "accepted"
+        ? "Terima kasih telah memasang aplikasi!"
+        : "Pemasangan belum dilakukan.";
+
+    deferredPrompt = null;
+    installArea.style.display = "none";
+  });
+
+  window.addEventListener("appinstalled", () => {
+    installArea.style.display = "none";
+  });
+
+  if ("serviceWorker" in navigator) {
+    window.addEventListener("load", () => {
+      navigator.serviceWorker.register("./service-worker.js");
+    });
+  }
+</script>
+
+</body>
+</html>

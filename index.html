@@ -83,56 +83,88 @@ button, .open {
   </div>
 </div>
 
+
 <script>
 let deferredPrompt = null;
 
 const installBtn = document.getElementById("installBtn");
 const statusText = document.getElementById("status");
 
-if ("serviceWorker" in navigator) {
-  navigator.serviceWorker.register("./service-worker.js");
-}
+const alamatGoogleSites =
+  "https://sites.google.com/view/pilkadessumurgintung2026/cekdatapemilih";
 
-window.addEventListener("beforeinstallprompt", (event) => {
-  event.preventDefault();
-  deferredPrompt = event;
-  installBtn.hidden = false;
-  statusText.textContent = "Aplikasi siap dipasang.";
-});
+const kunciInstalasi = "cekPilkadesSudahTerpasang";
 
-installBtn.addEventListener("click", async () => {
-  if (!deferredPrompt) return;
-
-  deferredPrompt.prompt();
-  const result = await deferredPrompt.userChoice;
-
-  if (result.outcome === "accepted") {
-    statusText.textContent = "Terima kasih, aplikasi sedang dipasang.";
-  } else {
-    statusText.textContent = "Pemasangan dibatalkan.";
-  }
-
-  deferredPrompt = null;
-  installBtn.hidden = true;
-});
-
-window.addEventListener("appinstalled", () => {
-  statusText.textContent = "Aplikasi berhasil dipasang.";
-  installBtn.hidden = true;
-});
-
-const sudahTerpasang =
+const modeAplikasi =
   window.matchMedia("(display-mode: standalone)").matches ||
   window.navigator.standalone === true;
 
-if (sudahTerpasang) {
-  window.location.replace(
-    "https://sites.google.com/view/pilkadessumurgintung2026/cekdatapemilih"
-  );
-} else {
-  statusText.textContent =
-    "Tekan PASANG APLIKASI untuk memasang di HP Anda.";
+// Fungsi membaca status instalasi
+function sudahTerpasang() {
+  return localStorage.getItem(kunciInstalasi) === "ya";
 }
+
+// Daftarkan service worker
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker.register("./service-worker.js")
+    .catch(error => console.log("Service Worker:", error));
+}
+
+// Jika dibuka melalui ikon aplikasi
+if (modeAplikasi) {
+  localStorage.setItem(kunciInstalasi, "ya");
+
+  window.location.replace(alamatGoogleSites);
+}
+
+// Jika sudah pernah ditandai terpasang
+else if (sudahTerpasang()) {
+  installBtn.hidden = true;
+  statusText.textContent = "Aplikasi sudah terpasang.";
+}
+
+// Jika belum terpasang, tunggu tawaran instalasi Chrome
+else {
+  statusText.textContent =
+    "Menyiapkan aplikasi untuk dipasang.";
+
+  window.addEventListener("beforeinstallprompt", (event) => {
+    if (sudahTerpasang()) return;
+
+    event.preventDefault();
+    deferredPrompt = event;
+
+    installBtn.hidden = false;
+    statusText.textContent = "Aplikasi siap dipasang.";
+  });
+
+  installBtn.addEventListener("click", async () => {
+    if (!deferredPrompt) return;
+
+    deferredPrompt.prompt();
+
+    const result = await deferredPrompt.userChoice;
+
+    if (result.outcome === "accepted") {
+      statusText.textContent =
+        "Terima kasih, aplikasi sedang dipasang.";
+    } else {
+      statusText.textContent =
+        "Pemasangan dibatalkan.";
+    }
+
+    deferredPrompt = null;
+    installBtn.hidden = true;
+  });
+}
+
+// Ketika instalasi berhasil
+window.addEventListener("appinstalled", () => {
+  localStorage.setItem(kunciInstalasi, "ya");
+
+  installBtn.hidden = true;
+  statusText.textContent = "Aplikasi berhasil dipasang.";
+});
 </script>
 </body>
 </html>

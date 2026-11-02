@@ -6,10 +6,13 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#163a6e">
 <title>Pasang Cek Pilkades 2026</title>
+
 <link rel="manifest" href="./manifest.json">
 <link rel="icon" href="./icon.svg">
+
 <style>
 * { box-sizing: border-box; }
+
 body {
   margin: 0;
   min-height: 100vh;
@@ -20,6 +23,7 @@ body {
   font-family: Arial, sans-serif;
   color: #163a6e;
 }
+
 .card {
   width: 100%;
   max-width: 420px;
@@ -29,16 +33,20 @@ body {
   text-align: center;
   box-shadow: 0 8px 30px #163a6e18;
 }
+
 .icon {
   font-size: 52px;
   margin-bottom: 12px;
 }
+
 h2 { margin: 8px 0; }
+
 p {
   color: #64748b;
   line-height: 1.6;
   font-size: 14px;
 }
+
 button, .open {
   display: block;
   width: 100%;
@@ -53,17 +61,23 @@ button, .open {
   cursor: pointer;
   margin-top: 15px;
 }
+
 .open { background: #163a6e; }
+
 #status {
   margin-top: 16px;
   font-size: 13px;
 }
 </style>
 </head>
+
 <body>
+
 <div class="card">
   <div class="icon">🗳️</div>
+
   <h2>CEK PILKADES 2026</h2>
+
   <p>
     Aplikasi resmi layanan pencarian data pemilih
     Pilkades Desa Sumurgintung Tahun 2026.
@@ -78,59 +92,35 @@ button, .open {
      BUKA PENCARIAN DATA PEMILIH
   </a>
 
-  <div id="status">
-    Menyiapkan aplikasi...
-  </div>
+  <div id="status">Menyiapkan aplikasi...</div>
 </div>
 
-
 <script>
-let deferredPrompt = null;
-
 const installBtn = document.getElementById("installBtn");
 const statusText = document.getElementById("status");
 
 const alamatGoogleSites =
   "https://sites.google.com/view/pilkadessumurgintung2026/cekdatapemilih";
 
-const kunciInstalasi = "cekPilkadesSudahTerpasang";
+let deferredPrompt = null;
 
 const modeAplikasi =
   window.matchMedia("(display-mode: standalone)").matches ||
   window.navigator.standalone === true;
 
-// Fungsi membaca status instalasi
-function sudahTerpasang() {
-  return localStorage.getItem(kunciInstalasi) === "ya";
-}
-
-// Daftarkan service worker
-if ("serviceWorker" in navigator) {
-  navigator.serviceWorker.register("./service-worker.js")
-    .catch(error => console.log("Service Worker:", error));
-}
-
-// Jika dibuka melalui ikon aplikasi
+// Jika dibuka dari ikon aplikasi
 if (modeAplikasi) {
-  localStorage.setItem(kunciInstalasi, "ya");
-
   window.location.replace(alamatGoogleSites);
-}
+} else {
 
-// Jika sudah pernah ditandai terpasang
-else if (sudahTerpasang()) {
-  installBtn.hidden = true;
-  statusText.textContent = "Aplikasi sudah terpasang.";
-}
+  // Daftarkan service worker
+  if ("serviceWorker" in navigator) {
+    navigator.serviceWorker.register("./service-worker.js")
+      .catch(error => console.log(error));
+  }
 
-// Jika belum terpasang, tunggu tawaran instalasi Chrome
-else {
-  statusText.textContent =
-    "Menyiapkan aplikasi untuk dipasang.";
-
+  // Deteksi apakah Chrome menawarkan instalasi
   window.addEventListener("beforeinstallprompt", (event) => {
-    if (sudahTerpasang()) return;
-
     event.preventDefault();
     deferredPrompt = event;
 
@@ -138,51 +128,43 @@ else {
     statusText.textContent = "Aplikasi siap dipasang.";
   });
 
+  // Tombol pemasangan
   installBtn.addEventListener("click", async () => {
 
-  if (!deferredPrompt) {
-    statusText.textContent =
-      "Instalasi otomatis belum tersedia. Buka menu Chrome (⋮), lalu pilih Instal aplikasi atau Tambahkan ke layar utama.";
+    if (!deferredPrompt) {
+      statusText.textContent =
+        "Silakan buka menu Chrome (⋮), lalu pilih Instal aplikasi atau Tambahkan ke layar utama.";
+      return;
+    }
 
-    return;
-  }
+    const promptEvent = deferredPrompt;
+    deferredPrompt = null;
 
-  deferredPrompt.prompt();
+    await promptEvent.prompt();
 
-  const result = await deferredPrompt.userChoice;
-
-  if (result.outcome === "accepted") {
-    statusText.textContent =
-      "Aplikasi sedang dipasang.";
-  } else {
-    statusText.textContent =
-      "Pemasangan dibatalkan.";
-  }
-
-  deferredPrompt = null;
-  installBtn.hidden = true;
-});
+    const result = await promptEvent.userChoice;
 
     if (result.outcome === "accepted") {
       statusText.textContent =
-        "Terima kasih, aplikasi sedang dipasang.";
+        "Aplikasi sedang dipasang.";
     } else {
       statusText.textContent =
         "Pemasangan dibatalkan.";
     }
 
-    deferredPrompt = null;
     installBtn.hidden = true;
   });
+
+  // Ketika aplikasi berhasil dipasang
+  window.addEventListener("appinstalled", () => {
+    installBtn.hidden = true;
+    statusText.textContent = "Aplikasi berhasil dipasang.";
+  });
+
+  statusText.textContent =
+    "Menunggu kesiapan instalasi aplikasi...";
 }
-
-// Ketika instalasi berhasil
-window.addEventListener("appinstalled", () => {
-  localStorage.setItem(kunciInstalasi, "ya");
-
-  installBtn.hidden = true;
-  statusText.textContent = "Aplikasi berhasil dipasang.";
-});
 </script>
+
 </body>
 </html>

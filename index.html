@@ -121,7 +121,11 @@ window.addEventListener("appinstalled", () => {
   installBtn.hidden = true;
 });
 
-if (window.matchMedia("(display-mode: standalone)").matches) {
+const sudahTerpasang =
+  window.matchMedia("(display-mode: standalone)").matches ||
+  window.navigator.standalone === true;
+
+if (sudahTerpasang) {
   window.location.replace(
     "https://sites.google.com/view/pilkadessumurgintung2026/cekdatapemilih"
   );
